@@ -152,7 +152,7 @@ class Crawler {
         break;
       }
 
-      // console.log(count)
+      console.log(count)
       var movieURL = returnList[count].urlTail.toString();
       const res = await https.get("https://moveek.com/phim" + movieURL);
 
@@ -160,6 +160,29 @@ class Crawler {
       const dom = new JSDOM(ele.rawHTML);
       var type_pick;
       let trailer_id = dom.window.document.getElementsByClassName('movie-actions clearfix m-b-sm visible-xs text-center')[0].getElementsByClassName('action action-trailer btn btn-rounded btn-lg btn-default')[1].getAttribute('data-video-url').toString()
+      var actors = [];
+      var actors_after;
+      var actors_length;
+
+      //conditions of ACTORS when crawl
+      if (dom.window.document.getElementsByClassName('movie-actors panel wrapper m-t')[0] === undefined) {
+        actors = null;
+      }
+      else {
+        actors_length = dom.window.document.getElementsByClassName('movie-actors panel wrapper m-t')[0].getElementsByClassName('col-xs-3 col-sm-2 block-actor').length;
+        if (actors_length > 10) {
+          for (var i = 0; i < 10; i++) {
+            actors.push(dom.window.document.getElementsByClassName('movie-actors panel wrapper m-t')[0].getElementsByClassName('col-xs-3 col-sm-2 block-actor')[i].getElementsByClassName('font-bold m-b-none text-ellipsis')[0].getElementsByTagName('a')[0].innerHTML);
+            actors_after = actors.join(', ').toString()
+          }
+        }
+        else {
+          for (var i = 0; i < actors_length; i++) {
+            actors.push(dom.window.document.getElementsByClassName('movie-actors panel wrapper m-t')[0].getElementsByClassName('col-xs-3 col-sm-2 block-actor')[i].getElementsByClassName('font-bold m-b-none text-ellipsis')[0].getElementsByTagName('a')[0].innerHTML);
+            actors_after = actors.join(', ').toString()
+          }
+        }
+      }
 
       //conditions of TYPE when crawl
       if (dom.window.document.getElementsByClassName('col-sm-10')[0].getElementsByClassName('text-white').length === 5) {
@@ -183,6 +206,7 @@ class Crawler {
             duration: dom.window.document.getElementsByClassName('action action-imdb btn btn-rounded btn-lg btn-icon btn-default')[0].innerHTML.toString().split('<span>'[0].toString().split('<br'))[0],
             trailer_url: 'https://www.youtube.com/embed/' + trailer_id,
             image_url: returnList[count].urlImg,
+            actors: actors_after,
             description: dom.window.document.getElementsByClassName('synopsis m-t m-b-xs')[0].getElementsByClassName('text-white')[0].innerHTML
           })
         }
@@ -196,6 +220,7 @@ class Crawler {
             duration: dom.window.document.getElementsByClassName('action action-imdb btn btn-rounded btn-lg btn-icon btn-default')[0].innerHTML.toString().split('<span>'[0].toString().split('<br'))[0],
             trailer_url: 'https://www.youtube.com/embed/' + trailer_id,
             image_url: returnList[count].urlImg,
+            actors: actors_after,
             description: dom.window.document.getElementsByClassName('synopsis m-t m-b-xs')[0].getElementsByClassName('text-white')[0].innerHTML
           })
         }
@@ -211,6 +236,7 @@ class Crawler {
             duration: dom.window.document.getElementsByClassName('action action-imdb btn btn-rounded btn-lg btn-icon btn-default')[1].innerHTML.toString().split('<span>'[0].toString().split('<br'))[0],
             trailer_url: 'https://www.youtube.com/embed/' + trailer_id,
             image_url: returnList[count].urlImg,
+            actors: actors_after,
             description: dom.window.document.getElementsByClassName('synopsis m-t m-b-xs')[0].getElementsByClassName('text-white')[0].innerHTML
           })
         }
@@ -224,6 +250,7 @@ class Crawler {
             duration: dom.window.document.getElementsByClassName('action action-imdb btn btn-rounded btn-lg btn-icon btn-default')[1].innerHTML.toString().split('<span>'[0].toString().split('<br'))[0],
             trailer_url: 'https://www.youtube.com/embed/' + trailer_id,
             image_url: returnList[count].urlImg,
+            actors: actors_after,
             description: dom.window.document.getElementsByClassName('synopsis m-t m-b-xs')[0].getElementsByClassName('text-white')[0].innerHTML
           })
         }
