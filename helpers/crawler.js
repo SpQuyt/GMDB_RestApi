@@ -152,7 +152,7 @@ class Crawler {
         break;
       }
 
-      console.log(count)
+      // console.log(count)
       var movieURL = returnList[count].urlTail.toString();
       const res = await https.get("https://moveek.com/phim" + movieURL);
 
